@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deepika Travels</title>
+
+<style>
+* {margin:0; padding:0; box-sizing:border-box; font-family:Arial;}
+* {transition: all 0.3s ease;}
+
+body {background:#f4f6f8;}
+h1, h2, h3 { color:#0a3d62; }
+
+/* Landing */
+.landing {
+    height:100vh;
+    background:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e') center/cover;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    color:white;
+}
+
+.landing button {
+    padding:15px 30px;
+    font-size:18px;
+    background:#eb7600;
+    color:white;
+    border:none;
+    cursor:pointer;
+}
+.landing button:hover { background:#3a0fd7; }
+
+#mainSite {display:none;}
+
+header {
+    background:#0a3d62;
+    color:white;
+    padding:15px 50px;
+    display:flex;
+    justify-content:space-between;
+}
+
+.section {padding:40px; text-align:center;}
+
+.cards {
+    display:flex;
+    flex-wrap:wrap;
+    gap:20px;
+    justify-content:center;
+}
+
+/* Card animation */
+.card {
+    width:280px;
+    background:white;
+    border-radius:10px;
+    overflow:hidden;
+    cursor:pointer;
+    box-shadow:0 4px 10px rgba(0,0,0,0.1);
+    opacity:1;
+    transform:scale(1);
+}
+.card:hover { transform:scale(1.05); }
+
+.card.hide {
+    opacity:0;
+    transform:scale(0.8);
+    pointer-events:none;
+}
+
+.card img {width:100%; height:180px;}
+
+/* Category buttons */
+.category-btn {
+    padding:8px 15px;
+    margin:5px;
+    border:none;
+    background:#3c04d6;
+    color:white;
+    cursor:pointer;
+}
+
+.category-btn.active {
+    background:#ff4757;
+    transform:scale(1.1);
+}
+
+.category-btn:hover { background:#0926ce; }
+
+/* Thank you popup */
+.thank-you {
+    position:fixed;
+    bottom:20px;
+    left:20px;
+    background:#2ed573;
+    color:white;
+    padding:12px 20px;
+    border-radius:8px;
+    display:none;
+}
+
+/* Form */
+.form-box {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    width: 250px;
+    display: none;
+    z-index: 1000;
+}
+.form-box input {
+    width: 100%;
+    margin: 5px 0;
+    padding: 8px;
+}
+
+/* Buttons */
+button {
+    padding:8px 15px;
+    margin:5px;
+    border:none;
+    background:#3c04d6;
+    color:white;
+    cursor:pointer;
+}
+button:hover { background:#0926ce; }
+
+/* ===== SMOOTH EFFECTS ===== */
+button, .category-btn, .landing button {
+    position: relative;
+    overflow: hidden;
+}
+
+button:hover, .category-btn:hover, .landing button:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+button:active, .category-btn:active, .landing button:active {
+    transform: scale(0.95);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+}
+
+button::after, .category-btn::after, .landing button::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    background: rgba(255,255,255,0.4);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.4s ease, height 0.4s ease, opacity 0.4s;
+    opacity: 0;
+}
+
+button:active::after,
+.category-btn:active::after,
+.landing button:active::after {
+    width: 200px;
+    height: 200px;
+    opacity: 1;
+    transition: 0s;
+}
+
+/* ===== ATTRACTIVE BUTTON DESIGN ===== */
+button,
+.category-btn,
+.landing button {
+    border-radius: 30px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    font-weight: bold;
+}
+
+button:hover,
+.category-btn:hover,
+.landing button:hover {
+    background: linear-gradient(135deg, #ff7eb3, #ff758c);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.25),
+                0 0 12px rgba(255,255,255,0.3);
+}
+
+.category-btn.active {
+    background: linear-gradient(135deg, #00c6ff, #0072ff);
+    box-shadow: 0 0 15px rgba(0,114,255,0.6);
+}
+
+/* Floating buttons */
+.call-btn {
+    position: fixed;
+    right: 20px;
+    bottom: 80px;
+    background: linear-gradient(135deg, #2ed573, #1dd1a1);
+    color: white;
+    font-size: 20px;
+    padding: 15px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* Chat */
+.chat-box {
+    position:fixed;
+    bottom:200px;
+    right:20px;
+    width:280px;
+    background:white;
+    border-radius:10px;
+    display:none;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Landing -->
+<div class="landing" id="landing">
+    <h1>ExploreWorld 🌍</h1>
+    <p>Your Travel Starts Here</p>
+    <button onclick="startSite()">Get Started</button>
+</div>
+
+<!-- Main -->
+<div id="mainSite">
+<header>
+    <h2>ExploreWorld</h2>
+</header>
+
+<section class="section">
+<h2>Select Category</h2>
+<button class="category-btn active" onclick="filterPlaces('all', this)">All</button>
+<button class="category-btn" onclick="filterPlaces('beach', this)">Beaches</button>
+<button class="category-btn" onclick="filterPlaces('mountain', this)">Mountains</button>
+<button class="category-btn" onclick="filterPlaces('city', this)">Cities</button>
+</section>
+
+<section class="section">
+<div class="cards">
+
+<!-- YOUR ORIGINAL CARDS (UNCHANGED) -->
+<div class="card beach"><img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e"><h3>Goa</h3></div>
+<div class="card mountain"><img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470"><h3>Manali</h3></div>
+<div class="card city"><img src="https://images.unsplash.com/photo-1505761671935-60b3a7427bad"><h3>Mumbai</h3></div>
+
+<div class="card beach"><img src="https://images.unsplash.com/photo-1500375592092-40eb2168fd21"><h3>Andaman</h3></div>
+<div class="card beach"><img src="https://images.unsplash.com/photo-1493558103817-58b2924bce98"><h3>Maldives</h3></div>
+
+<div class="card mountain"><img src="https://images.unsplash.com/photo-1521295121783-8a321d551ad2"><h3>Shimla</h3></div>
+<div class="card mountain"><img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee"><h3>Ooty</h3></div>
+
+<div class="card city"><img src="https://images.unsplash.com/photo-1587474260584-136574528ed5"><h3>Delhi</h3></div>
+<div class="card city"><img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085"><h3>Bangalore</h3></div>
+
+<!-- ✅ ADDED 5 NEW PLACES -->
+<div class="card beach"><img src="https://images.unsplash.com/photo-1473116763249-2faaef81ccda"><h3>Pondicherry</h3></div>
+<div class="card beach"><img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e"><h3>Kovalam</h3></div>
+<div class="card mountain"><img src="https://images.unsplash.com/photo-1549880338-65ddcdfd017b"><h3>Darjeeling</h3></div>
+<div class="card mountain"><img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee"><h3>Kodaikanal</h3></div>
+<div class="card city"><img src="C:\Users\K G KIRAN KUMAR\Downloads\360_F_360890991_Ykybj5JO5HYBaqWeROz9cR2jWXN8HZxf_edited.jpg"><h3>Hyderabad</h3></div>
+
+</div>
+</section>
+</div>
+
+<!-- ✅ ADDED BUTTON -->
+<div class="call-btn" onclick="openSupport()">📞</div>
+
+<!-- ✅ ADDED FORM -->
+<div class="form-box" id="supportForm">
+<input type="text" id="custName" placeholder="Your Name">
+<input type="text" id="custPhone" placeholder="Phone">
+<input type="text" id="custMsg" placeholder="Your Query">
+<button onclick="submitSupport()">Submit</button>
+<button onclick="closeSupport()">Close</button>
+</div>
+
+<div class="thank-you" id="thankYouMsg">Thank you for visiting ❤️</div>
+
+<script>
+function startSite() {
+    document.getElementById("landing").style.display = "none";
+    document.getElementById("mainSite").style.display = "block";
+}
+
+function filterPlaces(category, btn) {
+    document.querySelectorAll(".category-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+
+    let cards = document.querySelectorAll(".card");
+
+    cards.forEach(card => {
+        if (category === "all" || card.classList.contains(category)) {
+            card.style.display = "block";
+        } else {
+            card.style.display = "none";
+        }
+    });
+}
+
+document.body.addEventListener("click", () => {
+    let msg = document.getElementById("thankYouMsg");
+    msg.style.display = "block";
+    setTimeout(() => msg.style.display = "none", 2000);
+});
+
+/* ✅ ADDED ONLY */
+function openSupport() {
+    document.getElementById("supportForm").style.display = "block";
+}
+function closeSupport() {
+    document.getElementById("supportForm").style.display = "none";
+}
+function submitSupport() {
+    let name = document.getElementById("custName").value;
+    alert("Thank you " + name + "! We will contact you 📞");
+    closeSupport();
+}
+</script>
+
+</body>
+</html>
